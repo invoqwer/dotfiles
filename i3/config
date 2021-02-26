@@ -9,7 +9,7 @@ set $mod Mod4
 set $config $HOME/.config
 set $scripts $HOME/.config/scripts
 set $layouts $HOME/.config/i3/layouts
-set $projects $HOME/projects
+set $apps $HOME/dotfiles/apps
 
 # Background -------------------------------------------------------------------
 
@@ -59,7 +59,7 @@ exec_always --no-startup-id $scripts/dual-monitors
 exec_always --no-startup-id $scripts/set-sink
 
 # Start time tracker
-exec_always --no-startup-id $scripts/detach node $projects/be-productive/index.js
+exec_always --no-startup-id $scripts/detach node $apps/be-productive/index.js
 
 # I3 Styling -------------------------------------------------------------------
 

@@ -1,0 +1,3 @@
+[submodule "apps/be-productive"]
+	path = apps/be-productive
+	url = git@github.com:invoqwer/be-productive.git
