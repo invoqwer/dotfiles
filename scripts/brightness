@@ -1,0 +1,44 @@
+#!/bin/bash
+# Brightness management via xbacklight
+# may need to set backlight first: https://wiki.archlinux.org/index.php/backlight 
+
+# increase / decrease brightness by this percentage
+AMOUNT=10
+
+if [[ -z "$1" ]]; then
+    echo "Provide: (+/-/t/g)"
+    exit 1
+fi
+
+# get the brightness
+BRIGHTNESS=$(xbacklight -get | sed 's/\..*//g')
+
+# notifications
+NTF_NAME="Brightness"
+NTF_TIME="500"
+
+case $1 in
+    +) # increase brightness
+        xbacklight -inc $AMOUNT
+        ;;
+    -) # decrease brightness
+        xbacklight -dec $AMOUNT
+        ;;
+    t) # toggle between brightness 0 and 100
+        b=$(xbacklight -get | sed 's/\..*//g')
+        if [[ $((b)) -eq 100 ]]; then
+            xbacklight -set 0
+        else
+            xbacklight -set 100
+        fi
+        ;;
+    g) # print the brightness level
+        echo "$BRIGHTNESS"
+        ;;
+    *)
+        echo "Unrecognized option $1"
+        exit 1
+        ;;
+esac
+
+notify-send -t "$NTF_TIME" "$NTF_NAME" "$BRIGHTNESS"

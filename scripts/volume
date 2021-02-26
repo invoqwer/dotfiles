@@ -1,0 +1,46 @@
+#!/bin/bash
+# Volume management via pactl
+
+# increase / decrease volume by this percentage
+AMOUNT=5
+
+if [[ -z "$1" ]]; then
+    echo "Provide: (+/-/m/g)"
+    exit 1
+fi
+
+# get the sink id, use the current running sink
+OUTPUT=$(pactl list short sinks | awk -F'\t' -v output="RUNNING" 'BEGIN {OFS = FS} $5 ~ output {print $1,$2}' | head -n 1)
+SINK=$(echo "$OUTPUT" | awk '{ print $1 }')
+NAME=$(echo "$OUTPUT" | awk -F'[/.]' '{ print $2 }')
+
+# notifications
+NTF_NAME="Volume"
+NTF_TIME="500"
+
+case $1 in
+    +) # increase volume
+        pactl set-sink-volume "$SINK" +"$AMOUNT"%
+        ;;
+    -) # decrease volume
+        pactl set-sink-volume "$SINK" -"$AMOUNT"%
+        ;;
+    m) # volume mute
+        pactl set-sink-mute "$SINK" toggle
+        ;;
+    g) # print volume level
+        echo "$NAME: $VOL"
+        exit 1
+        ;;
+    *)
+        echo "Unrecognized option $1"
+        exit 1
+        ;;
+esac
+
+# get the updated volume
+INFO=$(pactl list sinks | grep -A 8 'RUNNING' | tail -n 2)
+MUTE=$(echo "$INFO" | head -n 1 | xargs)
+VOL=$(echo "$INFO" | tail -n 1 | awk -F'[/s]*' '{ print $4 }' | xargs)
+
+notify-send -t "$NTF_TIME" "$NTF_NAME" "$NAME: $VOL\n$MUTE"

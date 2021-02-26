@@ -1,0 +1,55 @@
+#!/bin/bash
+# Open a file copied to clipboard in an editor
+
+FILE=$(xclip -o)
+
+# notifications
+NTF_NAME="Open in Editor"
+NTF_TIME="3000"
+
+# Directories to search
+declare -A dirs
+dirs[home]=""
+dirs[master]="$HOME/sdmain/"
+dirs[master2]="$HOME/master-2/sdmain/"
+dirs[b52]="$HOME/sdmain/"
+dirs[b53]="$HOME/sdmain/"
+dirs[default]="${dirs[master]}"
+
+# .scala -> open in idea
+# else -> open in vscode
+open_file () {
+    if [[ "$1" == *.scala ]]; then
+        idea "$1"
+    else
+        code "$1"
+    fi
+}
+
+case $1 in
+    0) DIR="${dirs[home]}";;
+    m1) DIR="${dirs[master]}";;
+    m2) DIR="${dirs[master2]}";;
+    b52) DIR="${dirs[b52]}";;
+    b53) DIR="${dirs[b53]}";;
+    *) notify-send -t $NTF_TIME "$NTF_NAME" \ "Invalid Workspace";;
+esac
+
+
+# resolve tilde
+eval FILE="$FILE"
+# path outside of sdmain
+if [[ -f "$FILE" ]]; then
+    FILEPATH="$FILE"
+# path within sdmain
+elif [[ -f "$DIR/$FILE" ]]; then
+    FILEPATH="$DIR/$FILE"
+elif [[ -f "$DIR$FILE" ]]; then
+    FILEPATH="$DIR$FILE"
+else
+    notify-send -t $NTF_TIME "$NTF_NAME" \ "DIR: $1\n Invalid Path: $FILE"
+    exit 1
+fi
+
+notify-send -t $NTF_TIME "$NTF_NAME" \ "DIR: $1\n Path: $FILEPATH"
+open_file "$FILEPATH"

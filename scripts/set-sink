@@ -1,0 +1,89 @@
+#!/bin/bash
+# Set sink (audio output) to use
+
+# Substring of the sinks we want to use
+BLUETOOTH="bluez_sink"
+USB="usb-C-Media_Electronics_Inc"
+ANALOG="pci"
+
+BLUETOOTH_SINK=$(pactl list short sinks | awk -F'\t' -v output="$BLUETOOTH" 'BEGIN {OFS = FS} $2 ~ output {print $1}')
+USB_SINK=$(pactl list short sinks | awk -F'\t' -v output="$USB" 'BEGIN {OFS = FS} $2 ~ output {print $1}')
+ANALOG_SINK=$(pactl list short sinks | awk -F'\t' -v output="$ANALOG" 'BEGIN {OFS = FS} $2 ~ output {print $1}')
+
+# automatic selection
+if [[ -z "$1" ]]; then
+    # 1. bluetooth (already connected)
+    if [[ -n "$BLUETOOTH_SINK" ]]; then
+        echo "Selected sink: bluetooth"
+        SINK=$BLUETOOTH_SINK
+    # 2. usb audio
+    elif [[ -n "$USB_SINK" ]]; then
+        echo "Selected sink: usb audio"
+        SINK=$USB_SINK
+    # 3. pci analog
+    elif [[ -n "$ANALOG_SINK" ]]; then
+        echo "Selected sink: pci analog"
+        SINK=$ANALOG_SINK
+    fi
+# manual selection
+# provide substring to match from pactl
+else
+    INPUT="$1"
+    # bluetooth (not connected)
+    if [[ $INPUT == "bluetooth" ]]; then
+        # attempt to connect
+        pair-bluetooth
+        SINK=$(eval "$BLUETOOTH_SINK")
+        echo "$SINK"
+    elif [[ $INPUT == "usb" ]]; then
+        SINK=$USB_SINK
+    elif [[ $INPUT == "analog" ]]; then
+        SINK=$ANALOG_SINK
+    else
+        SINK=$(pactl list short sinks | awk -F'\t' -v output="$INPUT" 'BEGIN {OFS = FS} $2 ~ output {print $1}')
+    fi
+fi
+
+# chosen sink doesn't exist
+if [[ -z "$SINK" ]]; then
+    echo "Chosen sink doesn't exist. Available sinks:"
+    pactl list short sinks | awk '{ print $2,$7 }'
+    exit 1
+fi
+
+# multiple sinks selected
+if [[ "$(echo "$SINK" | wc -l)" -gt 1 ]]; then
+    echo "Error: multiple sinks selected"
+    echo "Matching sinks:"
+    pactl list short sinks | awk -F'\t' -v output="$SINK" 'BEGIN {OFS = FS} $2 ~ output {print $2,$5}'
+    exit 1
+fi
+
+echo "Chosen sink: $SINK"
+
+# unmute chosen sink, if it is muted
+if ! (pactl set-sink-mute "$SINK" 0); then
+    echo "Could not unmute chosen sink: $SINK"
+    exit 1
+fi
+
+# Suspend all other sinks that is not the chosen one
+mapfile -t SINKS < <(pactl list short sinks | awk -F'\t' -v output="$SINK" 'BEGIN {OFS = FS} $2 ~ output { print $1 }')
+for i in "${SINKS[@]}"
+do
+    echo "Suspending sink $i"
+    if [[ $i -eq $SINK ]]; then
+        continue
+    fi
+    pactl suspend-sink "$i" 1
+done
+
+# move all existing sink-inputs to chosen sink
+mapfile -t INPUTS < <(pactl list sink-inputs short | awk '{print $1}')
+for i in "${INPUTS[@]}"
+do
+    echo "Moving input $i to sink $SINK"
+    if ! (pactl move-sink-input "$i" "$SINK"); then
+        echo "Could not move input $i to sink $SINK"
+    fi
+done

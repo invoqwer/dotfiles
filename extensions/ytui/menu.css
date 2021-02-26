@@ -1,0 +1,30 @@
+:root {
+  --color1: black;
+  --color2: white;
+  --spacing: 5vw;
+  --size: 10vw;
+
+}
+
+body {
+  background-color: var(--color1);
+  color: var(--color2);
+  font-size: var(--size);
+}
+
+table {
+  border: none;
+  padding: var(--spacing);
+}
+
+tr {
+  display: block;
+  margin-bottom: var(--spacing);
+}
+
+input[type=checkbox] {
+  margin-left: var(--spacing);
+  display: block;
+  width: var(--size);
+  height: var(--size);
+}

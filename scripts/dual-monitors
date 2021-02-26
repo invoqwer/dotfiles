@@ -1,0 +1,31 @@
+#!/bin/bash
+# Extend desktop when using dual monitors
+
+# Find connected displays, there must be exactly 2 
+mapfile -t DP < <(xrandr | grep " connected " | awk '{ print $1 }')
+if [[ ${#DP[@]} -ne 2 ]]; then
+    echo "Exactly 2 monitors must be connected"
+    exit 1
+fi
+
+# disconnect from second monitor before extending
+# sometimes, when reconnecting hdmi, the extended display will not show on the 
+# second monitor
+echo "Disconnecting display: ${DP[1]}"
+xrandr --auto && xrandr --output "${DP[1]}" --off
+
+# Extend display: the primary display is always first
+echo "Extending displays"
+echo "Primary: ${DP[0]}, Secondary: ${DP[1]}"
+xrandr --output "${DP[0]}" --auto --output "${DP[1]}" --auto --mode 1920x1080 --right-of "${DP[0]}"
+
+# Move workspaces 1-4 to secondary
+# Move workspaces 5-7 to primary
+echo "Moving workspaces"
+i3-msg '[workspace="1"]' move workspace to output "${DP[1]}"
+i3-msg '[workspace="2"]' move workspace to output "${DP[1]}"
+i3-msg '[workspace="3"]' move workspace to output "${DP[1]}"
+i3-msg '[workspace="4"]' move workspace to output "${DP[1]}"
+i3-msg '[workspace="5"]' move workspace to output "${DP[0]}"
+i3-msg '[workspace="6"]' move workspace to output "${DP[0]}"
+i3-msg '[workspace="7"]' move workspace to output "${DP[0]}"

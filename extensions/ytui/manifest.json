@@ -1,0 +1,30 @@
+{
+    "name": "Youtube UI",
+    "version": "1.0",
+    "description": "Youtube UI",
+    "permissions": [
+        "storage",
+        "webRequest",
+        "webRequestBlocking",
+        "*://*.youtube.com/*",
+        "*://i.ytimg.com/*"
+    ],
+    "browser_action": {
+        "default_title": "YT UI",
+        "default_popup": "menu.html"
+    },
+    "background": {
+        "scripts": ["background.js"],
+        "persistent": true
+    },
+    "content_scripts": [
+        {
+            "matches": [
+                "*://*.youtube.com/*"
+            ],
+            "css": ["overlay.css"],
+            "js": ["overlay.js"]
+        }
+    ],
+    "manifest_version": 2
+  }

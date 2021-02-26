@@ -1,0 +1,18 @@
+#!/bin/bash
+# rotate the background image
+# ex: "bg-rotate [log file dir]"
+
+BG_DIR="$HOME/.config/bg"
+LOG_FILE="bg-rotate.log"
+
+if [[ -z "$1" ]]; then
+    feh --randomize --bg-fill "$BG_DIR"
+elif [[ -d "$1" ]]; then
+    date >> "$1/$LOG_FILE"
+    feh --randomize --bg-fill "$BG_DIR" >> "$1/$LOG_FILE" 2>&1
+fi
+
+
+
+
+

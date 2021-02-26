@@ -1,0 +1,8 @@
+#!/bin/bash
+# should be placed in the .git/hooks folder of "dotfiles" repo
+
+project_root=$(dirname $(dirname $(dirname $(realpath $0))))
+
+if ! (bash "$project_root/lint.sh"); then
+    exit 1
+fi

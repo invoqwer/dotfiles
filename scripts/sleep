@@ -1,0 +1,21 @@
+#!/bin/bash
+# Suspend, accounting for killing virtscreen instances
+
+VS_SESSION_NAME="virtscreen"
+INTERVAL="1000"
+
+# Kill Virtscreen, if it is running
+if tmux has-session -t $VS_SESSION_NAME 2>/dev/null; then
+    echo "Killing Virtscreen"
+    tmux kill-session -t $VS_SESSION_NAME
+
+    # wait until x11vnc is killed
+    while sleep 1; do
+        if ! (pgrep -x "x11vnc" 1>/dev/null); then
+            break
+        fi
+        notify-send -t $INTERVAL $VS_SESSION_NAME "Waiting for virtscreen to stop..."
+    done
+fi
+
+systemctl suspend

@@ -1,0 +1,14 @@
+#!/bin/bash
+# Edit a file using vscode
+# Run as root: "sudo edit-file X"
+
+DATA_DIR="$HOME/.code-root-user-data"
+
+if [[ -z "$1" ]]; then
+    echo "Provide a file name"
+# open as root
+elif [[ "$EUID" -eq 0 ]]; then
+    code --user-data-dir "$DATA_DIR" "$1"
+else
+    code "$1"
+fi

@@ -1,0 +1,26 @@
+#!/bin/bash
+# must run from sdmain root 
+# After building on Dev VM, copy the generated intellij deps to local sdmain 
+# ex: "copy-intellij-deps 10.0.00.00"
+
+if [[ -z "$1" ]]; then
+    echo "provide remote ip address"
+    exit 1
+fi
+
+if [[ "$(basename "$PWD")" != "sdmain" ]]; then
+    echo "must run within sdmain root"
+    exit 1
+fi
+
+REMOTE="$1"
+
+scp ubuntu@"$REMOTE":~/sdmain/src/java/sd/target/conscrypt/conscrypt.jar conscrypt.jar
+rm -rf src/java/sd/target/conscrypt/conscrypt.jar
+mv conscrypt.jar src/java/sd/target/conscrypt/conscrypt.jar
+echo "Copied conscrypt"
+
+scp ubuntu@"$REMOTE":~/sdmain/src/java/sd/target/intellij-deps/generated-intellij-deps.jar generated-intellij-deps.jar
+rm -rf src/java/sd/target/intellij-deps/generated-intellij-deps.jar
+mv generated-intellij-deps.jar src/java/sd/target/intellij-deps/generated-intellij-deps.jar
+echo "Copied generated-intellij-deps"
