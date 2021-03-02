@@ -14,13 +14,14 @@ if [[ "$(basename "$PWD")" != "sdmain" ]]; then
 fi
 
 REMOTE="$1"
+target="src/java/sd/target"
 
-scp ubuntu@"$REMOTE":~/sdmain/src/java/sd/target/conscrypt/conscrypt.jar conscrypt.jar
-rm -rf src/java/sd/target/conscrypt/conscrypt.jar
-mv conscrypt.jar src/java/sd/target/conscrypt/conscrypt.jar
+scp ubuntu@"$REMOTE":~/sdmain/$target/conscrypt/conscrypt.jar conscrypt.jar
+rm -rf $target/conscrypt/conscrypt.jar
+mv conscrypt.jar $target/conscrypt/conscrypt.jar
 echo "Copied conscrypt"
 
-scp ubuntu@"$REMOTE":~/sdmain/src/java/sd/target/intellij-deps/generated-intellij-deps.jar generated-intellij-deps.jar
-rm -rf src/java/sd/target/intellij-deps/generated-intellij-deps.jar
-mv generated-intellij-deps.jar src/java/sd/target/intellij-deps/generated-intellij-deps.jar
+scp ubuntu@"$REMOTE":~/sdmain/$target/intellij-deps/generated-intellij-deps.jar generated-intellij-deps.jar
+rm -rf $target/intellij-deps/generated-intellij-deps.jar
+mv generated-intellij-deps.jar $target/intellij-deps/generated-intellij-deps.jar
 echo "Copied generated-intellij-deps"

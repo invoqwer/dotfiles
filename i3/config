@@ -10,11 +10,12 @@ set $config $HOME/.config
 set $scripts $HOME/.config/scripts
 set $layouts $HOME/.config/i3/layouts
 set $apps $HOME/dotfiles/apps
+set $myterm alacritty --config-file="$HOME/dotfiles/term/alacritty.yml"
 
 # Background -------------------------------------------------------------------
 
-exec_always --no-startup-id feh --randomize --bg-fill $config/bg
-exec_always --no-startup-id "killall -q compton; compton --config $config/compton.conf"
+exec_always --no-startup-id $scripts/bg-rotate
+exec_always --no-startup-id $scripts/compositor
 
 # App Startup ------------------------------------------------------------------
 
@@ -35,7 +36,7 @@ exec_always --no-startup-id i3-msg "workspace 5; append_layout $layouts/ws5.json
 
 exec_always --no-startup-id i3-msg "\
         exec google-chrome; \
-        exec i3-sensible-terminal; exec i3-sensible-terminal; \
+        exec $myterm; exec $myterm; \
         exec code; \
         exec google-chrome; \
         exec discord; \
@@ -100,7 +101,7 @@ workspace_layout default
 floating_modifier $mod
 
 # start a terminal
-bindsym $mod+Return exec i3-sensible-terminal
+bindsym $mod+Return exec $myterm
 
 # kill focused window
 bindsym $mod+q kill

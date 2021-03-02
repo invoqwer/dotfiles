@@ -6,6 +6,7 @@ BLUETOOTH="bluez_sink"
 USB="usb-C-Media_Electronics_Inc"
 ANALOG="pci"
 
+# get the associated sinks
 BLUETOOTH_SINK=$(pactl list short sinks | awk -F'\t' -v output="$BLUETOOTH" 'BEGIN {OFS = FS} $2 ~ output {print $1}')
 USB_SINK=$(pactl list short sinks | awk -F'\t' -v output="$USB" 'BEGIN {OFS = FS} $2 ~ output {print $1}')
 ANALOG_SINK=$(pactl list short sinks | awk -F'\t' -v output="$ANALOG" 'BEGIN {OFS = FS} $2 ~ output {print $1}')

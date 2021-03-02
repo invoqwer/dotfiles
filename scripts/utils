@@ -35,7 +35,7 @@ case $1 in
         ;;
     isoc) # convert iso8601 (utc) timestamp to local time
         # example: "utc-to-local 021-02-24T21:12:02.479"
-        if [[ $# -lt 2 ]] ; then
+        if [[ "$#" -lt 2 ]]; then
             echo 'provide: iso8601'
         else
             date -d "$2 today -8 hours" "+%I:%M%p %Ss | %a.%d"
@@ -43,7 +43,7 @@ case $1 in
         ;;
     tsc) # convert timestamp in seconds (utc) to local time
         # example: "utc-to-local 1614207232"
-        if [[ $# -lt 2 ]] ; then
+        if [[ "$#" -lt 2 ]]; then
             echo 'provide: timestamp in seconds'
         else
             # trim numbers from tail, st timestamp is length 10

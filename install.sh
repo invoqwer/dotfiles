@@ -10,9 +10,6 @@ read -r -p "Press any key to continue."
 # compton
 ln -s "$HOME"/dotfiles/term/compton.conf "$HOME"/.config/compton.conf
 
-# alacritty
-ln -s "$HOME"/dotfiles/term/alacritty.yml "$HOME"/.config/alacritty/alacritty.yml
-
 # .zshrc
 rm "$HOME"/.zshrc
 ln -s "$HOME"/dotfiles/term/.zshrc "$HOME"/.zshrc

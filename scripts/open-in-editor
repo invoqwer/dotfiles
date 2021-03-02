@@ -1,19 +1,19 @@
 #!/bin/bash
 # Open a file copied to clipboard in an editor
 
-FILE=$(xclip -o)
+OPATH=$(xclip -o)
 
 # notifications
 NTF_NAME="Open in Editor"
-NTF_TIME="3000"
+NTF_TIME="5000"
 
 # Directories to search
 declare -A dirs
 dirs[home]=""
 dirs[master]="$HOME/sdmain/"
 dirs[master2]="$HOME/master-2/sdmain/"
-dirs[b52]="$HOME/sdmain/"
-dirs[b53]="$HOME/sdmain/"
+dirs[b52]="$HOME/b52/sdmain/"
+dirs[b53]="$HOME/b53/sdmain/"
 dirs[default]="${dirs[master]}"
 
 # .scala -> open in idea
@@ -24,6 +24,11 @@ open_file () {
     else
         code "$1"
     fi
+}
+
+# just open in vscode
+open_dir () {
+    code "$1"
 }
 
 case $1 in
@@ -37,19 +42,20 @@ esac
 
 
 # resolve tilde
-eval FILE="$FILE"
+eval OPATH="$OPATH"
+# remove leading slash, if exists
+OPATH="${OPATH#/}"
+
 # path outside of sdmain
-if [[ -f "$FILE" ]]; then
-    FILEPATH="$FILE"
+if [[ -f "$OPATH" || -d "$OPATH" ]]; then
+    FULL_PATH="$OPATH"
 # path within sdmain
-elif [[ -f "$DIR/$FILE" ]]; then
-    FILEPATH="$DIR/$FILE"
-elif [[ -f "$DIR$FILE" ]]; then
-    FILEPATH="$DIR$FILE"
+elif [[ -f "$DIR/$OPATH" || -d "$DIR/$OPATH" ]]; then
+    FULL_PATH="$DIR/$OPATH"
 else
-    notify-send -t $NTF_TIME "$NTF_NAME" \ "DIR: $1\n Invalid Path: $FILE"
+    notify-send -t $NTF_TIME "$NTF_NAME" \ "DIR: $1\n Invalid Path: $OPATH"
     exit 1
 fi
 
-notify-send -t $NTF_TIME "$NTF_NAME" \ "DIR: $1\n Path: $FILEPATH"
-open_file "$FILEPATH"
+notify-send -t $NTF_TIME "$NTF_NAME" \ "DIR: $1\n Path: $FULL_PATH"
+open_file "$FULL_PATH"

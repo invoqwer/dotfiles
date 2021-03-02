@@ -24,6 +24,6 @@ Chrome -> chromium
 
 ## Technologies
 - compton
-- zsh
+- zsh + oh my zsh
 - alacritty
 - i3

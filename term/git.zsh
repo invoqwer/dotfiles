@@ -15,7 +15,7 @@ alias sut='--set-upstream-to'
 
 # Git ls-files
 glsf () {
-    if [[ ! $# -eq 1 ]]; then
+    if [[ ! "$#" -eq 1 ]]; then
         echo 'provide filename'
         return 1
     fi

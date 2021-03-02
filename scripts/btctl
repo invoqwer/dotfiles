@@ -1,0 +1,55 @@
+#!/bin/bash
+# Manage a paired bluetooth device, via bluetoothctl
+
+# How to pair a new device:
+# 1. bluetoothctl
+# 2. power on
+# 3. scan on
+# 4. pair 
+# 5. trust device
+
+# Wireless devices
+declare -A devices
+# for taotronics, connecting to "L" should connect both earbuds
+devices[taotronicsL]="TAOTRONICS SoundLiberty 95 L"
+devices[taotronicsR]="TAOTRONICS SoundLiberty 95 R"
+devices[default]="${devices[taotronicsL]}"
+
+# optional: connect / disconnect (default: connect)
+# optional: device name (default: use devices[default])
+[[ -z "$1" ]] && CMD="c" || CMD="$1"
+
+if [[ -z "$2" ]]; then
+    TARGET="${devices[default]}"
+else
+    for i in "${!devices[@]}"
+    do
+        if [[ "$i" == "$2" ]]; then
+            TARGET="${devices[$i]}"
+            break
+        fi
+    done
+    if [[ -z "$TARGET" ]]; then
+        echo "Device $2 not found"
+        exit 1
+    fi
+fi
+
+MAC_ADDR=$(bluetoothctl devices | awk -F'\t' -v output="$TARGET" 'BEGIN {OFS = FS} $1 ~ output { print $1 }' | awk '{print $2}')
+
+case $CMD in
+    "c")
+        echo "Connecting to $TARGET"
+        bluetoothctl connect "$MAC_ADDR"
+        ;;
+    "dc")
+        echo "Disconnecting from $TARGET"
+        bluetoothctl disconnect "$MAC_ADDR"
+        ;;
+    *)
+        echo "provide: (c/dc) [dev]"
+        ;;
+esac
+
+    
+

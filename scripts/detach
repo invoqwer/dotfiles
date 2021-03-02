@@ -1,19 +1,19 @@
 #!/bin/bash
 # Run a process in the background
 
-# at least 1 argument to detach should exist
-if [[ $# -lt 1 ]]; then
+# at least 1 argument should exist
+if [[ "$#" -lt 1 ]]; then
     echo "Provide a (process) to run in bg"
     exit 1
 fi
 
 # the first argument should be a valid executable
-if ! command -v "$1" &> /dev/null; then
+if ! (command -v "$1" &> /dev/null); then
     echo "Provided process does not exist"
     exit 1
 fi
 
-# pass all arguments from detach to nohup
+# pass all arguments to nohup
 # ignore log file, stdout and stderr
 CMD="${*:1}"
 nohup "$($CMD)" >/dev/null 2>&1 &
@@ -28,5 +28,5 @@ if [[ "$?" -eq 1 ]]; then
     exit 1
 fi
 
-# return PID of bg process
-echo "Running '$CMD' in bg, PID: $!"
+# return PID of background process
+echo "'$CMD', PID: $!"

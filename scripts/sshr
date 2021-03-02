@@ -1,0 +1,14 @@
+#!/bin/bash
+# ssh-remote, wrapper around ssh.
+# Open ssh instance in a new terminal, with a different alacritty conf
+
+SCRIPTS="$(dirname "$(realpath "$0")")"
+DETACH="$SCRIPTS/detach"
+CONF="$(dirname "$SCRIPTS")/term/alacritty-dev.yml"
+
+if [[ "$#" -lt 2 ]]; then
+    echo "provide: (username + ip)"
+    exit 1
+fi
+
+"$DETACH" alacritty --config-file="$CONF" -e ssh "$1"@"$2"

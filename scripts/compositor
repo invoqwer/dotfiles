@@ -1,0 +1,8 @@
+#!/bin/bash
+# restart compositor (compton)
+
+DETACH="$(dirname "$(realpath "$0")")/detach"
+CONF="$HOME/.config/compton.conf"
+
+killall -q compton
+"$DETACH" compton --config "$CONF"

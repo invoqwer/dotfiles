@@ -9,8 +9,7 @@ if [[ ${#DP[@]} -ne 2 ]]; then
 fi
 
 # disconnect from second monitor before extending
-# sometimes, when reconnecting hdmi, the extended display will not show on the 
-# second monitor
+# sometimes, after sleeping, the extended display will not show on the second monitor
 echo "Disconnecting display: ${DP[1]}"
 xrandr --auto && xrandr --output "${DP[1]}" --off
 
@@ -19,8 +18,8 @@ echo "Extending displays"
 echo "Primary: ${DP[0]}, Secondary: ${DP[1]}"
 xrandr --output "${DP[0]}" --auto --output "${DP[1]}" --auto --mode 1920x1080 --right-of "${DP[0]}"
 
-# Move workspaces 1-4 to secondary
-# Move workspaces 5-7 to primary
+# Move i3 workspaces 1-4 to secondary display
+# Move i3 workspaces 5-7 to primary display
 echo "Moving workspaces"
 i3-msg '[workspace="1"]' move workspace to output "${DP[1]}"
 i3-msg '[workspace="2"]' move workspace to output "${DP[1]}"

@@ -1,0 +1,66 @@
+#!/bin/bash
+# Append alacritty colors from json file
+
+# for killing with a function
+trap "exit 1" TERM
+PID=$$
+
+COLORS="$(dirname "$(realpath "$0")")/colors.json"
+
+# $1 = jq key selector
+function get_color () {
+    RES=$(cat "$COLORS" | jq "$1")
+    
+    if [[ $RES == "null" ]]; then
+        1>&2 echo "key $1 does not exist"
+        kill -s TERM $PID
+    fi
+    
+    # remove leading and ending quotation marks
+    RES="${RES%\"}"
+    RES="${RES#\"}"
+
+    echo $RES
+}
+
+# $1 = alacritty color key
+# $2 = map name
+function make_yaml () {
+    echo "${cmap_normal[black]}"
+    
+    STR="$1:"
+    map='${!'"$2"'[@]}'
+    map='${'"$2"'['"$i"']}'
+
+    for i in $(eval echo '${!'"$2"'[@]}')
+    do
+        STR="$STR"$'\n '"$i: '$(eval echo '${'"$2"'['"$i"']}')'"
+    done
+
+    echo "$STR"
+}
+
+# mapping: alacritty keys to colors
+# both alacritty.yml and alacritty-dev.yml
+
+declare -A cmap_normal
+cmap_normal[black]=$(get_color ".BLACK.true")
+cmap_normal[red]=$(get_color ".RED._1")
+cmap_normal[green]=$(get_color ".GREEN._1")
+cmap_normal[yellow]=$(get_color ".YELLOW._2")
+cmap_normal[blue]=$(get_color ".BLUE._2")
+cmap_normal[magenta]=$(get_color ".PURPLE._2")
+cmap_normal[cyan]=$(get_color ".BLUE._4")
+cmap_normal[white]=$(get_color ".WHITE.true")
+
+declare -A cmap_primary_local
+cmap_primary_local[background]=$(get_color ".BLACK.true")
+cmap_primary_local[foreground]=$(get_color ".WHITE.true")
+
+declare -A cmap_primary_remote
+cmap_primary_remote[background]=$(get_color ".BLUE._5")
+cmap_primary_remote[foreground]=$(get_color ".WHITE.true")
+
+make_yaml "normal" "cmap_normal"
+make_yaml "primary" "cmap_primary_local"
+make_yaml "primary" "cmap_primary_remote"

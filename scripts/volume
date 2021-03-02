@@ -18,19 +18,30 @@ NAME=$(echo "$OUTPUT" | awk -F'[/.]' '{ print $2 }')
 NTF_NAME="Volume"
 NTF_TIME="500"
 
+function print_volume () {
+    # get volume, mute
+    INFO=$(pactl list sinks | grep -A 8 'RUNNING' | tail -n 2)
+    MUTE=$(echo "$INFO" | head -n 1 | awk -F'[:]' '{ print $2 }')
+    VOL=$(echo "$INFO" | tail -n 1 | awk -F'[/t]' '{ print $4 }')
+
+    printf "%s: %s\nMute: %s" "$NAME" "${VOL// }" "${MUTE// }"
+}
+
 case $1 in
     +) # increase volume
         pactl set-sink-volume "$SINK" +"$AMOUNT"%
+        # notify-send -t "$NTF_TIME" "$NTF_NAME" "$(printf "%s: %s\n%s" "$NAME" "$VOL" "$MUTE")"
         ;;
     -) # decrease volume
         pactl set-sink-volume "$SINK" -"$AMOUNT"%
+        # notify-send -t "$NTF_TIME" "$NTF_NAME" "$(printf "%s: %s\n%s" "$NAME" "$VOL" "$MUTE")"
         ;;
     m) # volume mute
         pactl set-sink-mute "$SINK" toggle
         ;;
     g) # print volume level
-        echo "$NAME: $VOL"
-        exit 1
+        print_volume
+        exit 0
         ;;
     *)
         echo "Unrecognized option $1"
@@ -38,9 +49,4 @@ case $1 in
         ;;
 esac
 
-# get the updated volume
-INFO=$(pactl list sinks | grep -A 8 'RUNNING' | tail -n 2)
-MUTE=$(echo "$INFO" | head -n 1 | xargs)
-VOL=$(echo "$INFO" | tail -n 1 | awk -F'[/s]*' '{ print $4 }' | xargs)
-
-notify-send -t "$NTF_TIME" "$NTF_NAME" "$NAME: $VOL\n$MUTE"
+notify-send -t "$NTF_TIME" "$NTF_NAME" "$(print_volume)"
