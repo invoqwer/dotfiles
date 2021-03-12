@@ -1,3 +1,6 @@
 
 # background images
 bg/
+
+term/alacritty.yml
+term/alacritty-dev.yml
