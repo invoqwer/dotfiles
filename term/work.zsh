@@ -20,24 +20,9 @@ function ssh-vm-local() {
 }
 
 # OUTSIDE SDDB =================================================================
+
 function vpn() {
     globalprotect launch-ui
-}
-
-function sddb() {
-    if [[ -z "$1" ]] ; then
-        echo "provide: (m1/m2/b52/b53)"
-    else
-        case $1 in
-            m1) sd_dev_box --sdmain_repo ~/sdmain;;
-            m2) sd_dev_box --sdmain_repo ~/master-2/sdmain;;
-            m3) sd_dev_box --sdmain_repo ~/master-3/sdmain;;
-            b52) sd_dev_box --sdmain_repo ~/b52/sdmain;;
-            b53) sd_dev_box --sdmain_repo ~/b53/sdmain;;
-            *)
-                echo "provide: (m1/m2/b52/b53)"
-        esac
-    fi
 }
 
 function cleandocker() {
