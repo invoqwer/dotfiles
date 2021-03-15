@@ -43,10 +43,15 @@ exec_always --no-startup-id i3-msg "\
         exec obinskit;"
 
 assign [class="Code"] 3
+
 assign [class="jetbrains-idea-ce"] 4
 for_window [class="jetbrains-idea-ce"] floating disable
+assign [class="jetbrains-pycharm-ce"] 4
+for_window [class="jetbrains-pycharm-ce"] floating disable
+
 assign [class="discord"] 6
 assign [class="Slack"] 6
+
 assign [class="zoom"] 7
 assign [class="ObinsKit"] 7
 for_window [class="ObinsKit"] floating disable
@@ -223,33 +228,32 @@ mode "resize" {
 bindsym $mod+r mode "resize"
 
 # For open-in-editor script
-mode "openineditor" {
+mode "open-in-editor" {
         bindsym 0 exec $scripts/open-in-editor 0; exec i3-msg mode default
         bindsym 1 exec $scripts/open-in-editor m1; exec i3-msg mode default
         bindsym 2 exec $scripts/open-in-editor m2; exec i3-msg mode default
-        bindsym 3 exec $scripts/open-in-editor b52; exec i3-msg mode default
-        bindsym 4 exec $scripts/open-in-editor b53; exec i3-msg mode default
+        bindsym 3 exec $scripts/open-in-editor m3; exec i3-msg mode default
+        bindsym 4 exec $scripts/open-in-editor b52; exec i3-msg mode default
+        bindsym 5 exec $scripts/open-in-editor b53; exec i3-msg mode default
         
         bindsym Escape mode "default"
 }
 
-bindsym $mod+x mode "openineditor"
+bindsym $mod+x mode "open-in-editor"
 
 # Custom Bindings --------------------------------------------------------------
 
 # Suspend
 bindsym $mod+Shift+Escape exec $scripts/sleep
 
-# Screen Brightness
-## Laptop Keys
+# Brightness
 bindsym XF86MonBrightnessDown exec $scripts/brightness -
 bindsym XF86MonBrightnessUp exec $scripts/brightness +
-## Anne Pro 2
-bindsym F4 exec $scripts/brightness t
-bindsym F5 exec $scripts/brightness -
-bindsym F6 exec $scripts/brightness +
+# bindsym F4 exec $scripts/brightness t
+# bindsym F5 exec $scripts/brightness -
+# bindsym F6 exec $scripts/brightness +
 
-# Pulse Audio
+# Audio
 bindsym XF86AudioMute exec $scripts/volume m
 bindsym XF86AudioLowerVolume exec $scripts/volume -
 bindsym XF86AudioRaiseVolume exec $scripts/volume +

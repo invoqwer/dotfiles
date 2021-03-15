@@ -4,6 +4,7 @@
 declare -A workspaces
 workspaces[m1]="$HOME/sdmain"
 workspaces[m2]="$HOME/master-2/sdmain"
+workspaces[m3]="$HOME/master-3/sdmain"
 workspaces[b52]="$HOME/b52/sdmain"
 workspaces[b53]="$HOME/b53/sdmain"
 

@@ -3,6 +3,37 @@ parent=$(dirname $curr)
 sshr="$parent/scripts/sshr"
 conf="$curr/alacritty-dev.yml"
 
+# SCP run logs from dev vm to local machine
+function copy-logs() {
+    if [[ -z "$1" ]]; then
+        echo "provide workspace"
+        kill -INT $$
+    fi
+
+    case $1 in
+        m1) WS="~/sdmain/logs/latest-run";;
+        m2) WS="~/master-2/sdmain/logs/latest-run";;
+        m3) WS="~/master-3/sdmain/logs/latest-run";;
+        b52) WS="~/b52/sdmain/logs/latest-run";;
+        b53) WS="~/b53/sdmain/logs/latest-run";;
+    esac
+
+    LOGS_PATH="$HOME/remote-logs/$1/"
+    NAME="rlogs"
+    DIRNAME="$NAME"
+
+    mkdir -p "$LOGS_PATH"
+
+    i="1"
+    while [[ -d "$LOGS_PATH$DIRNAME" ]]; do
+        DIRNAME="$NAME-$i"
+        i="$((i+1))"
+    done
+
+    scp -r ubuntu@"$dev_vm":"$WS" "$LOGS_PATH$DIRNAME"
+    echo "$LOGS_PATH$DIRNAME"
+}
+
 # DEV VM =======================================================================
 
 function ssh-dev() {

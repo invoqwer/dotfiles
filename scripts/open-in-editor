@@ -12,6 +12,7 @@ declare -A dirs
 dirs[home]=""
 dirs[master]="$HOME/sdmain/"
 dirs[master2]="$HOME/master-2/sdmain/"
+dirs[master3]="$HOME/master-3/sdmain/"
 dirs[b52]="$HOME/b52/sdmain/"
 dirs[b53]="$HOME/b53/sdmain/"
 dirs[default]="${dirs[master]}"
@@ -35,6 +36,7 @@ case $1 in
     0) DIR="${dirs[home]}";;
     m1) DIR="${dirs[master]}";;
     m2) DIR="${dirs[master2]}";;
+    m3) DIR="${dirs[master3]}";;
     b52) DIR="${dirs[b52]}";;
     b53) DIR="${dirs[b53]}";;
     *) notify-send -t $NTF_TIME "$NTF_NAME" \ "Invalid Workspace";;
