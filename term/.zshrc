@@ -91,8 +91,7 @@ export GOPATH=$HOME/go
 export GO111MODULE=on
 
 # Custom scripts
-path+=($HOME/.config/scripts)
-export PATH
+export PATH="$PATH:$HOME/.config/scripts"
 
 # Alias
 alias tm="tmux"

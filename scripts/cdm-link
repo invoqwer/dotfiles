@@ -1,0 +1,43 @@
+#!/bin/bash
+# open a link like "CDM-XXXXXX" in browser
+
+# notifications
+NTF_NAME="CDM Link"
+NTF_TIME="5000"
+
+# GUI
+if [[ -z "$1" ]]; then
+    CDM_NUM=$(zenity --entry --title="Open CDM Link" --text="CDM number:")
+    # quit out of the popup
+    if [[ -z "$CDM_NUM" ]]; then
+        exit 0
+    fi
+# no GUI
+else
+    CDM_NUM=$(xclip -o)
+fi
+
+function is-valid-input() {
+    # has the "CDM-" prefix
+    if [[ "$CDM_NUM" == *"-"* ]]; then
+        CDM_NUM=$(awk -F- '{print $2}' <<< "$CDM_NUM")
+    fi
+
+    # just the CDM number
+    if [[ "${#CDM_NUM}" -eq 6 ]]; then
+        return 0
+    fi
+
+    return 1
+}
+
+if is-valid-input; then
+    CDM_NUM="CDM-$CDM_NUM"
+    notify-send -t "$NTF_TIME" "$NTF_NAME" "Opening: $CDM_NUM"
+    google-chrome https://rubrik.atlassian.net/browse/"$CDM_NUM"
+    exit 0
+fi
+
+notify-send -t "$NTF_TIME" "$NTF_NAME" "Cannot open: $CDM_NUM"
+exit 1
+

@@ -42,7 +42,6 @@ case $1 in
     *) notify-send -t $NTF_TIME "$NTF_NAME" \ "Invalid Workspace";;
 esac
 
-
 # resolve tilde
 eval OPATH="$OPATH"
 # remove leading slash, if exists

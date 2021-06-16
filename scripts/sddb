@@ -1,5 +1,11 @@
 #!/bin/bash
 # Launch sd_dev_box inside named tmux instances
+# Example usage:
+#   Connect to existing instance of sddb, or create a new one if non existent
+#       "sddb b53"
+#   You can force create another instance of sddb for the same folder
+#   This will create sddb for m1 in tmux session m1_2 if session m1 already exists
+#       "sddb m1 n"
 
 declare -A workspaces
 workspaces[m1]="$HOME/sdmain"
@@ -8,11 +14,33 @@ workspaces[m3]="$HOME/master-3/sdmain"
 workspaces[b52]="$HOME/b52/sdmain"
 workspaces[b53]="$HOME/b53/sdmain"
 
-function is_running () {
+function print_help() {
+    STR="sddb ("
+    for i in "${!workspaces[@]}"
+    do
+        STR="$STR $i "
+    done
+    STR="$STR) [n]"
+    echo "$STR"
+}
+
+if [[ -z "$1" ]]; then
+    echo "You must provide a workspace"
+    print_help
+    exit 1
+fi
+
+if [[ -n "$2" ]] && [[ "$2" != "n" ]]; then
+    echo "unrecognized option $2"
+    print_help
+    exit 1
+fi
+
+function is_running() {
     (tmux has-session -t "$1" 2>/dev/null) && return 0 || return 1
 }
 
-function is_valid_ws () {
+function is_valid_workspace() {
     for i in "${!workspaces[@]}"
     do
         if [[ "$i" == "$1" ]]; then
@@ -22,27 +50,27 @@ function is_valid_ws () {
     return 1
 }
 
-function print_help () {
-    STR="provide: ("
-    for i in "${!workspaces[@]}"
-    do
-        STR="$STR $i "
-    done
-    STR="$STR)"
-    echo "$STR"
-}
-
-if (! is_valid_ws "$1"); then
-    print_help
-    exit 1
-fi
-
-if (is_running "$1"); then
-    echo "tmux session $1 already running"
+if [[ -z "$2" ]] && (is_running "$1"); then
+    echo "Connecting to existing tmux session $1"
     tmux attach -t "$1"
     exit 0
 fi
 
-echo "running $1"
-tmux new-session -d -s "$1" "sd_dev_box --sdmain_repo ${workspaces[$1]}"
-tmux attach -t "$1"
+if (! is_valid_workspace "$1"); then
+    echo "$1 is not a valid workspace"
+    print_help
+    exit 1
+fi
+
+SESSION="$1"
+COUNT=$(tmux ls | grep -c "$1")
+
+if [[ -n "$2" ]] && (( "$COUNT" > 0 )); then
+    SESSION="$1_$((COUNT + 1))"
+    echo "Creating new sddb instance for $1: $SESSION"
+else
+    echo "Creating sddb $SESSION"
+fi
+
+tmux new-session -d -s "$SESSION" "sd_dev_box --sdmain_repo ${workspaces[$1]}"
+tmux attach -t "$SESSION"

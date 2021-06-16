@@ -3,6 +3,32 @@ parent=$(dirname $curr)
 sshr="$parent/scripts/sshr"
 conf="$curr/alacritty-dev.yml"
 
+# DEV VM =======================================================================
+
+function ssh-dev() {
+    "$sshr" ubuntu "$dev_vm"
+}
+
+# marcus-ubuntu14-pure
+function ssh-vm-pure() {
+    "$sshr" ubuntu "$vm_pure"
+}
+
+# marcus-ubuntu14-local
+function ssh-vm-local() {
+    "$detach" ubuntu "$vm_local"
+}
+
+# OUTSIDE SDDB =================================================================
+
+function vpn() {
+    globalprotect launch-ui
+}
+
+function cleandocker() {
+    docker system prune -a
+}
+
 # SCP run logs from dev vm to local machine
 function copy-logs() {
     if [[ -z "$1" ]]; then
@@ -34,32 +60,6 @@ function copy-logs() {
     echo "$LOGS_PATH$DIRNAME"
 }
 
-# DEV VM =======================================================================
-
-function ssh-dev() {
-    "$sshr" ubuntu "$dev_vm"
-}
-
-# marcus-ubuntu14-pure
-function ssh-vm-pure() {
-    "$sshr" ubuntu "$vm_pure"
-}
-
-# marcus-ubuntu14-local
-function ssh-vm-local() {
-    "$detach" ubuntu "$vm_local"
-}
-
-# OUTSIDE SDDB =================================================================
-
-function vpn() {
-    globalprotect launch-ui
-}
-
-function cleandocker() {
-    docker system prune -a
-}
-
 # WITHIN SDDB ==================================================================
 # assumption: running from sdmain folder within sddb
 
@@ -68,6 +68,7 @@ alias cluster="${PWD}/deployment/cluster.sh"
 alias pord="bodega place order "
 alias lord="bodega list orders"
 alias cord="bodega consume order "
+alias clord="bodega close order "
 alias eord="bodega extend order "
 
 function owncache() {
@@ -95,6 +96,7 @@ function bcleancache() {
 	time bazel clean --async --expunge
 }
 
+# need to run from sdmain root
 function bintellijdeps() {
 	time ./tools/bzl_tools/build/gen_intellij_deps.sh
 }
