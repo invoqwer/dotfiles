@@ -10,9 +10,9 @@
 declare -A workspaces
 workspaces[m1]="$HOME/sdmain"
 workspaces[m2]="$HOME/master-2/sdmain"
-workspaces[m3]="$HOME/master-3/sdmain"
 workspaces[b52]="$HOME/b52/sdmain"
 workspaces[b53]="$HOME/b53/sdmain"
+workspaces[b60]="$HOME/b60/sdmain"
 
 function print_help() {
     STR="sddb ("
@@ -50,15 +50,22 @@ function is_valid_workspace() {
     return 1
 }
 
+if (! is_valid_workspace "$1"); then
+    echo "$1 is not a valid workspace"
+    print_help
+    exit 1
+fi
+
 if [[ -z "$2" ]] && (is_running "$1"); then
     echo "Connecting to existing tmux session $1"
     tmux attach -t "$1"
     exit 0
 fi
 
-if (! is_valid_workspace "$1"); then
-    echo "$1 is not a valid workspace"
-    print_help
+URL="repository.rubrik.com"
+ping -c 1 "$URL"
+if [[ "$?" -eq 2 ]]; then
+    echo "Cannot connect to $URL"
     exit 1
 fi
 

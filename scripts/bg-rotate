@@ -1,6 +1,8 @@
 #!/bin/bash
 # rotate the background image
-# ex: "bg-rotate [log file dir]"
+# TODO: setup "themes" - one folder per theme
+# ex: "bg-rotate [theme] [log-file-dir]"
+# ex: "bg-rotate [log-file-dir]"
 
 BG_DIR="$HOME/.config/bg"
 LOG_FILE="bg-rotate.log"

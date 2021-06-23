@@ -1,7 +1,6 @@
-curr=$(dirname $(realpath $0))
-parent=$(dirname $curr)
-sshr="$parent/scripts/sshr"
-conf="$curr/alacritty-dev.yml"
+CURR=$(dirname $(realpath $0))
+PARENT=$(dirname $CURR)
+sshr="$PARENT/scripts/sshr"
 
 # DEV VM =======================================================================
 

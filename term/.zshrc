@@ -87,8 +87,9 @@ export NVM_DIR="$HOME/.nvm"
 export PATH="$PATH:$HOME/.rvm/bin"
 
 # Golang
-export GOPATH=$HOME/go
+# export GOPATH=$HOME/go
 export GO111MODULE=on
+export PATH=$PATH:/usr/local/go/bin
 
 # Custom scripts
 export PATH="$PATH:$HOME/.config/scripts"
