@@ -1,0 +1,19 @@
+#!/bin/bash
+# (re)start all cron jobs.
+
+CURR=$(dirname $(realpath $0))
+PARENT=$(dirname $CURR)
+bgrotate="$PARENT/scripts/bg-rotate"
+
+# recreate crontab file
+crontab -r 2>/dev/null
+
+# add cron jobs
+
+# rotate bg (default settings) every hour
+# "DISPLAY" needed for feh through cron
+display=$(env | grep -i display)
+(crontab -l 2>/dev/null; printf '%s\n' "0 * * * * $display $bgrotate" ) | crontab -
+
+# show cron jobs
+crontab -l

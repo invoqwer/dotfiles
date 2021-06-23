@@ -1,5 +1,6 @@
 #!/bin/bash
-# open a link like "CDM-XXXXXX" in browser
+# open a link like "CDM-XXXXXX" or "XXXXXX" in the browser
+# "XXXXXX" is the 6 digit CDM number
 
 # notifications
 NTF_NAME="CDM Link"

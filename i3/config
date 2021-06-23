@@ -2,24 +2,29 @@
 
 # Variables --------------------------------------------------------------------
 
-# Mod key
+# mod key
 set $mod Mod4
 
-# Paths
+# paths
 set $config $HOME/.config
 set $scripts $HOME/.config/scripts
 set $layouts $HOME/.config/i3/layouts
 set $apps $HOME/dotfiles/apps
 set $myterm alacritty --config-file="$HOME/dotfiles/term/alacritty.yml"
 
-# Background -------------------------------------------------------------------
+# System Startup ---------------------------------------------------------------
 
-exec_always --no-startup-id $scripts/bg-rotate
+# compositor + bg
 exec_always --no-startup-id $scripts/compositor
+exec_always --no-startup-id $scripts/bg-rotate
+
+# cron jobs
+exec_always --no-startup-id $scripts/start-cron-jobs
 
 # App Startup ------------------------------------------------------------------
 
-# Workspace Apps
+# TODO: different startup, depending on work/personal laptop
+# start apps on different workspaces
 # 1: Web
 # 2: Terminals
 # 3: Code
@@ -27,7 +32,7 @@ exec_always --no-startup-id $scripts/compositor
 # 6: Discord / Slack
 # 7: ObinsKit / Zoom
 
-# Restore Layouts
+# restore layouts
 exec_always --no-startup-id i3-msg "workspace 1; append_layout $layouts/ws1.json;"
 exec_always --no-startup-id i3-msg "workspace 2; append_layout $layouts/ws2.json;"
 exec_always --no-startup-id i3-msg "workspace 4; append_layout $layouts/ws4.json;"
@@ -58,13 +63,13 @@ for_window [class="ObinsKit"] floating disable
 
 # Scripts ----------------------------------------------------------------------
 
-# Extend monitor if connected
+# extend to second monitor if connected
 exec_always --no-startup-id $scripts/dual-monitors
 
-# Set audio sink
+# set audio sink
 exec_always --no-startup-id $scripts/set-sink
 
-# Start time tracker
+# start time tracker
 exec_always --no-startup-id $scripts/detach node $apps/be-productive/index.js
 
 # I3 Styling -------------------------------------------------------------------
@@ -102,7 +107,7 @@ workspace_layout default
 
 # I3 Bindings ------------------------------------------------------------------
 
-# Use Mouse+$mod to drag floating windows to their wanted position
+# use Mouse+$mod to drag floating windows to their wanted position
 floating_modifier $mod
 
 # start a terminal
@@ -194,11 +199,15 @@ bindsym $mod+Shift+0 move container to workspace 10
 
 # reload the configuration file
 bindsym $mod+Shift+c reload
+
 # restart i3 inplace (preserves your layout/session, can be used to upgrade i3)
 bindsym $mod+Shift+r restart
+
 # exit i3 (logs you out of your X session)
 bindsym $mod+Shift+e exec "i3-nagbar -t warning -m 'You pressed the exit shortcut. Do you really want to exit i3? This will end your X session.' -b 'Yes, exit i3' 'i3-msg exit'"
+
 # suspend
+bindsym $mod+Shift+Escape exec $scripts/sleep
 # bindsym $mod+Shift+s exec "systemctl suspend"
 
 # I3 Modes ---------------------------------------------------------------------
@@ -242,29 +251,26 @@ bindsym $mod+x mode "open-in-editor"
 
 # Custom Bindings --------------------------------------------------------------
 
-# Suspend
-bindsym $mod+Shift+Escape exec $scripts/sleep
-
-# Brightness
+# brightness
 bindsym XF86MonBrightnessDown exec $scripts/brightness -
 bindsym XF86MonBrightnessUp exec $scripts/brightness +
 # bindsym F4 exec $scripts/brightness t
 # bindsym F5 exec $scripts/brightness -
 # bindsym F6 exec $scripts/brightness +
 
-# Audio
+# audio
 bindsym XF86AudioMute exec $scripts/volume m
 bindsym XF86AudioLowerVolume exec $scripts/volume -
 bindsym XF86AudioRaiseVolume exec $scripts/volume +
 
-# Move Workspaces between Screens
+# move Workspaces between Screens
 bindsym $mod+Ctrl+Shift+Right move workspace to output right
 bindsym $mod+Ctrl+Shift+Left move workspace to output left
 
-# App Shortcuts
+# apps
 bindsym $mod+g exec google-chrome
 bindsym $mod+n exec nautilus
 
-# Utils
+# utils
 bindsym $mod+Ctrl+Shift+c exec flameshot gui -p $HOME/screenshots
 bindsym $mod+c exec $scripts/cdm-link nogui
