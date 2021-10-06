@@ -68,7 +68,7 @@ exec_always --no-startup-id $scripts/dual-monitors
 exec_always --no-startup-id $scripts/set-sink
 
 # start time tracker
-exec_always --no-startup-id $scripts/detach node $apps/be-productive/index.js
+exec_always --no-startup-id $scripts/detach npm run start --prefix $apps/be-productive
 
 # I3 Styling -------------------------------------------------------------------
 
