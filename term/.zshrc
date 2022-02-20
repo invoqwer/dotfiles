@@ -86,9 +86,12 @@ export NVM_DIR="$HOME/.nvm"
 # Add RVM to PATH for scripting. Make sure this is the last PATH variable change.
 export PATH="$PATH:$HOME/.rvm/bin"
 
+#pyenv
+export PATH="$PATH:$HOME/.pyenv/bin"
+eval "$(pyenv init -)"
+
 # Golang
-export GOPATH=$HOME/go
-export GO111MODULE=on
+export PATH=$PATH:/usr/local/go/bin
 
 # Custom scripts
 export PATH="$PATH:$HOME/.config/scripts"
@@ -97,11 +100,18 @@ export PATH="$PATH:$HOME/.config/scripts"
 alias tm="tmux"
 alias dock="docker"
 alias e="edit-file"
-
 alias zshr="source ~/.zshrc"
 alias zshe="e ~/.zshrc"
+
+# Git alias
+unalias g
+alias g="mygit "
+alias gg='git grep -n '
+alias ggi='git grep -i -n '
+alias glog='git log --pretty=format:"%h%x09%an%x09%ad%x09%s" '
 
 # custom env vars
 export dev_vm="marcus-tan-l01.colo.rubrik.com"
 export vm_pure="10.0.77.29"
 export vm_local="10.0.160.134"
+

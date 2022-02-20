@@ -1,0 +1,20 @@
+#!/bin/bash
+# My git: manually handle second argument aliases
+
+declare -A aliases
+aliases[chp]='cherry-pick'
+aliases[sub]='submodule'
+aliases[st]='status'
+aliases[co]='checkout'
+aliases[com]='commit'
+aliases[br]='branch'
+aliases[ldiff]='diff HEAD HEAD~1'
+
+new_cmd="git"
+for arg in "$@"
+do
+    new_cmd="$new_cmd ${aliases[$arg]:-$arg}"
+done
+
+# echo "$new_cmd"
+$new_cmd

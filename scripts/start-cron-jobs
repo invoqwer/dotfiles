@@ -1,8 +1,8 @@
 #!/bin/bash
 # (re)start all cron jobs.
 
-CURR=$(dirname $(realpath $0))
-PARENT=$(dirname $CURR)
+CURR="$(dirname "$(realpath "$0")")"
+PARENT="$(dirname "$CURR")"
 bgrotate="$PARENT/scripts/bg-rotate"
 
 # recreate crontab file

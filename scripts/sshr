@@ -1,14 +1,18 @@
 #!/bin/bash
 # ssh-remote, wrapper around ssh.
-# Open ssh instance in a new terminal, with a different alacritty conf
+# Open ssh instance in a new terminal, with a different terminal conf
 
 SCRIPTS="$(dirname "$(realpath "$0")")"
 DETACH="$SCRIPTS/detach"
-CONF="$(dirname "$SCRIPTS")/term/alacritty-dev.yml"
 
 if [[ "$#" -lt 2 ]]; then
-    echo "provide: (username + ip)"
+    echo "provide: (username) (ip)"
     exit 1
 fi
 
-"$DETACH" alacritty --config-file="$CONF" -e ssh "$1"@"$2"
+if ! command -v "alacritty" &> /dev/null; then
+    "$DETACH" i3-sensible-terminal ssh "$1"@"$2"
+else
+    CONF="$(dirname "$SCRIPTS")/term/alacritty-dev.yml"
+    "$DETACH" alacritty --config-file="$CONF" -e ssh "$1"@"$2"
+fi

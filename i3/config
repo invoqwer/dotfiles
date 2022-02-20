@@ -10,7 +10,8 @@ set $config $HOME/.config
 set $scripts $HOME/.config/scripts
 set $layouts $HOME/.config/i3/layouts
 set $apps $HOME/dotfiles/apps
-set $myterm alacritty --config-file="$HOME/dotfiles/term/alacritty.yml"
+set $myterm i3-sensible-terminal
+# set $myterm alacritty --config-file="$HOME/dotfiles/term/alacritty.yml"
 
 # System Startup ---------------------------------------------------------------
 
@@ -30,7 +31,7 @@ exec_always --no-startup-id $scripts/start-cron-jobs
 # 3: Code
 # 5: Music Web
 # 6: Discord / Slack
-# 7: ObinsKit / Zoom
+# 7: Zoom
 
 # restore layouts
 exec_always --no-startup-id i3-msg "workspace 1; append_layout $layouts/ws1.json;"
@@ -44,22 +45,16 @@ exec_always --no-startup-id i3-msg "\
         exec $myterm; exec $myterm; \
         exec code; \
         exec google-chrome; \
-        exec discord; \
-        exec obinskit;"
+        exec discord;"
 
 assign [class="Code"] 3
-
 assign [class="jetbrains-idea-ce"] 4
 for_window [class="jetbrains-idea-ce"] floating disable
 assign [class="jetbrains-pycharm-ce"] 4
 for_window [class="jetbrains-pycharm-ce"] floating disable
-
 assign [class="discord"] 6
 assign [class="Slack"] 6
-
 assign [class="zoom"] 7
-assign [class="ObinsKit"] 7
-for_window [class="ObinsKit"] floating disable
 
 # Scripts ----------------------------------------------------------------------
 
@@ -70,7 +65,7 @@ exec_always --no-startup-id $scripts/dual-monitors
 exec_always --no-startup-id $scripts/set-sink
 
 # start time tracker
-exec_always --no-startup-id $scripts/detach node $apps/be-productive/index.js
+exec_always --no-startup-id $scripts/detach npm start --prefix $apps/be-productive
 
 # I3 Styling -------------------------------------------------------------------
 

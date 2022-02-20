@@ -1,5 +1,6 @@
 #!/bin/bash
 # Manage a paired bluetooth device, via bluetoothctl
+# NOTE: DOESN'T WORK ANYMORE, bluetoothctl cmd doesn't terminate anymore 
 
 # How to pair a new device:
 # 1. bluetoothctl
@@ -11,9 +12,11 @@
 # Wireless devices
 declare -A devices
 # for taotronics, connecting to "L" should connect both earbuds
-devices[taotronicsL]="TAOTRONICS SoundLiberty 95 L"
-devices[taotronicsR]="TAOTRONICS SoundLiberty 95 R"
-devices[default]="${devices[taotronicsL]}"
+devices[ttl]="TAOTRONICS SoundLiberty 95 L"
+devices[ttr]="TAOTRONICS SoundLiberty 95 R"
+# PrimeCables CSBT-322 Wireless Speaker
+devices[spkr]="CSBT-322"
+devices[default]="${devices[ttl]}"
 
 # optional: connect / disconnect (default: connect)
 # optional: device name (default: use devices[default])
@@ -34,16 +37,18 @@ else
         exit 1
     fi
 fi
+echo "Target: $TARGET"
 
 MAC_ADDR=$(bluetoothctl devices | awk -F'\t' -v output="$TARGET" 'BEGIN {OFS = FS} $1 ~ output { print $1 }' | awk '{print $2}')
+echo "Mac Addr: $MAC_ADDR"
 
 case $CMD in
     "c")
-        echo "Connecting to $TARGET"
+        echo "Connecting..."
         bluetoothctl connect "$MAC_ADDR"
         ;;
     "dc")
-        echo "Disconnecting from $TARGET"
+        echo "Disconnecting..."
         bluetoothctl disconnect "$MAC_ADDR"
         ;;
     *)
