@@ -67,6 +67,7 @@ plugins=(
 )
 
 source $ZSH/oh-my-zsh.sh
+source $ZSH/git.zsh
 
 # You may need to manually set your language environment
 # export LANG=en_US.UTF-8
@@ -87,9 +88,14 @@ export NVM_DIR="$HOME/.nvm"
 export PATH="$PATH:$HOME/.rvm/bin"
 
 # Golang
-# export GOPATH=$HOME/go
-export GO111MODULE=on
-export PATH=$PATH:/usr/local/go/bin
+if [[ $OSTYPE == 'darwin'* ]]; then
+    export GOPATH=$HOME/go
+    export GOROOT="$(brew --prefix golang)/libexec"
+    export PATH="$PATH:${GOPATH}/bin:${GOROOT}/bin"
+else
+    export GO111MODULE=on
+    export PATH=$PATH:/usr/local/go/bin
+fi
 
 # Custom scripts
 export PATH="$PATH:$HOME/.config/scripts"
@@ -101,8 +107,3 @@ alias e="edit-file"
 
 alias zshr="source ~/.zshrc"
 alias zshe="e ~/.zshrc"
-
-# custom env vars
-export dev_vm="marcus-tan-l01.colo.rubrik.com"
-export vm_pure="10.0.77.29"
-export vm_local="10.0.160.134"
